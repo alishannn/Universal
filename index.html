@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Imaging Point - Diagnostic Center</title>
+    <link rel="icon" type="image/x-icon" href="hospital.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* --- Base and Font Styles --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-tap-highlight-color: transparent;
+        }
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 72px;
+        }
+
+        /* --- Header Styles --- */
+        #main-header {
+            background-color: transparent;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        #main-header.scrolled {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        #main-header.scrolled .nav-link,
+        #main-header.scrolled #mobile-menu-button,
+        #main-header.scrolled #desktop-theme-toggle,
+        #main-header.scrolled #mobile-theme-toggle {
+            color: #f59e0b; /* amber-500 */
+        }
+        #main-header.scrolled h1,
+        #main-header.scrolled .logo-svg {
+            color: #0d9488; /* teal-600 */
+        }
+        #main-header.scrolled .nav-link:hover {
+            color: #d97706; /* amber-600 */
+        }
+
+        /* --- Dark Theme Header --- */
+        html.dark #main-header.scrolled {
+            background-color: rgba(31, 41, 55, 0.8); /* gray-800 with opacity */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- Mobile Menu Animation --- */
+        #mobile-menu-container {
+            transition: background-color 0.4s ease;
+        }
+        #mobile-menu {
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        #mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        /* --- Component & Animation Styles --- */
+        .hero-section {
+            background: linear-gradient(to right, #0d9488, #0f766e);
+        }
+        .interactive-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .interactive-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* --- Dark Theme Styles --- */
+        html.dark body {
+            background-color: #111827; /* gray-900 */
+            color: #d1d5db; /* gray-300 */
+        }
+        html.dark .bg-white {
+            background-color: #1f2937; /* gray-800 */
+        }
+        html.dark .bg-gray-50 {
+            background-color: #111827; /* gray-900 */
+        }
+        html.dark .text-gray-800 {
+            color: #f9fafb; /* gray-50 */
+        }
+        html.dark .text-gray-700 {
+             color: #d1d5db; /* gray-300 */
+        }
+        html.dark .text-gray-600 {
+            color: #9ca3af; /* gray-400 */
+        }
+        html.dark .text-gray-500 {
+            color: #6b7280; /* gray-500 */
+        }
+        html.dark .border-amber-100 {
+            border-color: #4b5563; /* gray-700 */
+        }
+        html.dark .border-gray-200 {
+            border-color: #374151; /* gray-700 */
+        }
+        html.dark .hero-section {
+            background: linear-gradient(to right, #1f2937, #111827);
+        }
+        html.dark #mobile-menu {
+             background-color: #1f2937; /* gray-800 */
+        }
+        html.dark .nav-item-mobile {
+            color: #d1d5db;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 transition-colors duration-500">
+
+    <!-- Header -->
+    <header id="main-header" class="fixed top-0 w-full z-50 transition-all duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="#" class="flex items-center space-x-4">
+                     <svg class="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 text-white logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35zM11 14h2v-3h3V9h-3V6h-2v3H8v2h3v3z"/>
+                      </svg>
+                    <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-white">Universal Imaging Point</h1>
+                </a>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#about" class="text-white hover:text-gray-200 nav-link transition-colors duration-300">About Us</a>
+                <a href="#services" class="text-white hover:text-gray-200 nav-link transition-colors duration-300">Services</a>
+                <a href="#technology" class="text-white hover:text-gray-200 nav-link transition-colors duration-300">Technology</a>
+                <a href="#gallery" class="text-white hover:text-gray-200 nav-link transition-colors duration-300">Gallery</a>
+                <a href="#feedback" class="text-white hover:text-gray-200 nav-link transition-colors duration-300">Feedback</a>
+                <a href="#contact" class="text-white hover:text-gray-200 nav-link transition-colors duration-300">Contact</a>
+                <a href="#contact" class="bg-amber-500 text-white font-semibold px-5 py-2 rounded-full hover:bg-amber-600 transition-all duration-300 transform hover:scale-105 active:scale-95">Book Appointment</a>
+                <button id="desktop-theme-toggle" class="text-white hover:text-gray-200 transition-colors duration-300 focus:outline-none rounded-full p-2 active:bg-black/20">
+                    <svg id="desktop-theme-toggle-dark-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="desktop-theme-toggle-light-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                </button>
+            </div>
+            <div class="md:hidden flex items-center space-x-2 z-[101]">
+                <button id="mobile-theme-toggle" class="text-white hover:text-gray-200 transition-colors duration-300 focus:outline-none rounded-full p-2 active:bg-black/20">
+                    <svg id="mobile-theme-toggle-dark-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="mobile-theme-toggle-light-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                </button>
+                <button id="mobile-menu-button" class="text-white p-2 -mr-2 focus:outline-none rounded-full active:bg-black/20">
+                    <i id="menu-open-icon" class="fas fa-bars text-2xl w-6 h-6"></i>
+                    <i id="menu-close-icon" class="fas fa-times text-2xl w-6 h-6 hidden"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Mobile Menu Container -->
+    <div id="mobile-menu-container" class="fixed inset-0 z-40 hidden bg-black bg-opacity-0">
+        <div id="mobile-menu" class="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-teal-50 shadow-xl p-8 pt-20">
+            <nav class="flex flex-col space-y-6 text-lg">
+                <a href="#about" class="nav-item-mobile text-gray-800 hover:text-amber-500">About Us</a>
+                <a href="#services" class="nav-item-mobile text-gray-800 hover:text-amber-500">Services</a>
+                <a href="#technology" class="nav-item-mobile text-gray-800 hover:text-amber-500">Technology</a>
+                <a href="#gallery" class="nav-item-mobile text-gray-800 hover:text-amber-500">Gallery</a>
+                <a href="#feedback" class="nav-item-mobile text-gray-800 hover:text-amber-500">Feedback</a>
+                <a href="#contact" class="nav-item-mobile text-gray-800 hover:text-amber-500">Contact</a>
+                <a href="#contact" class="nav-item-mobile mt-4 inline-block bg-amber-500 text-white font-semibold text-center px-4 py-2 rounded-full hover:bg-amber-600 active:scale-95 transition-transform">Book Appointment</a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero-section text-white pt-40 pb-24 md:pt-52 md:pb-32">
+        <div class="container mx-auto px-4 text-center animate-on-scroll">
+            <h2 class="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">Advanced Diagnostic Imaging</h2>
+            <p class="text-md sm:text-lg md:text-xl mb-10 max-w-3xl mx-auto">Providing accurate, timely, and compassionate care through state-of-the-art imaging services.</p>
+            <a href="#services" class="bg-white text-teal-600 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition-all duration-300 text-lg transform hover:scale-105 active:scale-95">Our Services</a>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 md:mb-16 animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Meet Our Specialist</h2>
+                <div class="w-24 h-1 bg-amber-500 mx-auto mt-4"></div>
+            </div>
+            <div class="flex flex-col md:flex-row items-center gap-8 md:gap-12 animate-on-scroll">
+                <div class="md:w-1/3 text-center">
+                    <a href="Richa.png" class="gallery-link">
+                        <img src="Richa.png" alt="Dr. Richa" class="rounded-full shadow-lg mx-auto w-48 h-48 md:w-60 md:h-60 object-cover border-4 border-amber-100 cursor-pointer transition-transform duration-300 hover:scale-105" loading="lazy">
+                    </a>
+                    <h3 class="text-2xl font-bold mt-6 text-gray-600">Dr. Richa</h3>
+                    <p class="text-gray-600 mt-1">MD (Radio-Diagnosis), Jipmer</p>
+                    <p class="text-gray-500 text-sm">Ex. Senior Resident, AIIMS</p>
+                </div>
+                <div class="md:w-2/3 text-center md:text-left">
+                    <p class="text-base sm:text-lg text-gray-700 leading-relaxed mb-4">
+                        Dr. Richa is a highly skilled and experienced radiologist dedicated to providing the highest standard of diagnostic services. With a strong academic background from prestigious institutions like Jipmer and AIIMS, she brings a wealth of knowledge and expertise to Universal Imaging Point.
+                    </p>
+                    <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
+                        Her commitment to patient care is paramount. Dr. Richa ensures that every patient receives a thorough and accurate diagnosis, utilizing the latest technology and techniques in the field of radiology. She believes in a compassionate approach, making sure patients are comfortable and well-informed throughout their visit.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16 md:py-24">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 md:mb-16 animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Our Services</h2>
+                 <p class="text-base sm:text-lg text-gray-600 mt-2">24/7 emergency services available for CT Scan, X-Ray & MRI.</p>
+                <div class="w-24 h-1 bg-amber-500 mx-auto mt-4"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="interactive-card bg-white p-6 sm:p-8 rounded-xl shadow-lg animate-on-scroll active:scale-95 transition-transform">
+                    <div class="text-teal-600 mb-4"><i class="fas fa-x-ray text-4xl"></i></div>
+                    <h3 class="text-xl font-bold mb-2">X-Ray</h3>
+                    <p class="text-gray-600">High-quality digital X-ray imaging for clear and precise diagnosis of bone and soft tissue conditions.</p>
+                </div>
+                <div class="interactive-card bg-white p-6 sm:p-8 rounded-xl shadow-lg animate-on-scroll active:scale-95 transition-transform">
+                    <div class="text-teal-600 mb-4"><i class="fas fa-wave-square text-4xl"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Ultrasound & 4D Doppler</h3>
+                    <p class="text-gray-600">Advanced ultrasound and 4D color doppler services for real-time imaging of organs, tissues, and blood flow.</p>
+                </div>
+                <div class="interactive-card bg-white p-6 sm:p-8 rounded-xl shadow-lg animate-on-scroll active:scale-95 transition-transform">
+                    <div class="text-teal-600 mb-4"><i class="fas fa-brain text-4xl"></i></div>
+                    <h3 class="text-xl font-bold mb-2">CT Scan (4D Multi-Slice)</h3>
+                    <p class="text-gray-600">State-of-the-art 4D multi-slice CT scanner for detailed cross-sectional images of the body.</p>
+                </div>
+                 <div class="interactive-card bg-white p-6 sm:p-8 rounded-xl shadow-lg animate-on-scroll active:scale-95 transition-transform">
+                    <div class="text-teal-600 mb-4"><i class="fas fa-heart-pulse text-4xl"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Echocardiography</h3>
+                    <p class="text-gray-600">Comprehensive cardiac ultrasound to assess the heart's structure and function.</p>
+                </div>
+                 <div class="interactive-card bg-white p-6 sm:p-8 rounded-xl shadow-lg animate-on-scroll active:scale-95 transition-transform">
+                    <div class="text-teal-600 mb-4"><i class="fas fa-magnifying-glass-plus text-4xl"></i></div>
+                    <h3 class="text-xl font-bold mb-2">FNAC & Biopsy</h3>
+                    <p class="text-gray-600">CT and USG guided procedures for accurate sample collection and diagnosis.</p>
+                </div>
+                 <div class="interactive-card bg-white p-6 sm:p-8 rounded-xl shadow-lg animate-on-scroll active:scale-95 transition-transform">
+                    <div class="text-teal-600 mb-4"><i class="fas fa-venus-mars text-4xl"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Sono Mammography</h3>
+                    <p class="text-gray-600">Specialized ultrasound imaging for breast health assessment and cancer screening.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Our Technology Section -->
+    <section id="technology" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 md:mb-16 animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Our Technology in Action</h2>
+                <div class="w-24 h-1 bg-amber-500 mx-auto mt-4"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="animate-on-scroll">
+                    <h3 class="text-xl font-bold mb-4 text-center">X-Ray</h3>
+                    <div class="rounded-lg overflow-hidden shadow-lg">
+                        <video class="w-full" autoplay loop muted playsinline>
+                            <source src="vid/xray.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+                <div class="animate-on-scroll">
+                    <h3 class="text-xl font-bold mb-4 text-center">CT Scan</h3>
+                    <div class="rounded-lg overflow-hidden shadow-lg">
+                        <video class="w-full" autoplay loop muted playsinline>
+                            <source src="vid/head.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+                <div class="animate-on-scroll">
+                    <h3 class="text-xl font-bold mb-4 text-center">Ultrasound</h3>
+                    <div class="rounded-lg overflow-hidden shadow-lg">
+                        <video class="w-full" autoplay loop muted playsinline>
+                            <source src="vid/womb.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-16 md:py-24">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 md:mb-16 animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Our Facility</h2>
+                <div class="w-24 h-1 bg-amber-500 mx-auto mt-4"></div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="overflow-hidden rounded-lg shadow-lg animate-on-scroll interactive-card">
+                    <a href="Waiting_Area.jpg" class="gallery-link">
+                        <img src="Waiting_Area.jpg" alt="Waiting Area" class="gallery-img w-full h-full object-cover cursor-pointer" loading="lazy">
+                    </a>
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-lg animate-on-scroll interactive-card">
+                     <a href="Ultrasound_Room.jpg" class="gallery-link">
+                        <img src="Ultrasound_Room.jpg" alt="Ultrasound Room" class="gallery-img w-full h-full object-cover cursor-pointer" loading="lazy">
+                    </a>
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-lg animate-on-scroll interactive-card">
+                    <a href="Reception.jpg" class="gallery-link">
+                        <img src="Reception.jpg" alt="Reception" class="gallery-img w-full h-full object-cover cursor-pointer" loading="lazy">
+                    </a>
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-lg animate-on-scroll interactive-card">
+                    <a href="Reception_Desk.jpg" class="gallery-link">
+                        <img src="Reception_Desk.jpg" alt="Reception Desk" class="gallery-img w-full h-full object-cover cursor-pointer" loading="lazy">
+                    </a>
+                </div>
+                 <div class="overflow-hidden rounded-lg shadow-lg animate-on-scroll interactive-card">
+                     <a href="Equipment.jpg" class="gallery-link">
+                        <img src="Equipment.jpg" alt="Equipment" class="gallery-img w-full h-full object-cover cursor-pointer" loading="lazy">
+                    </a>
+                </div>
+                 <div class="overflow-hidden rounded-lg shadow-lg animate-on-scroll interactive-card">
+                     <a href="Interior.jpg" class="gallery-link">
+                        <img src="Interior.jpg" alt="Interior" class="gallery-img w-full h-full object-cover cursor-pointer" loading="lazy">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 md:py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12 md:mb-16 animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800">Get In Touch</h2>
+                <div class="w-24 h-1 bg-amber-500 mx-auto mt-4"></div>
+            </div>
+            <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
+                <div class="lg:w-1/2 bg-white p-6 sm:p-8 rounded-xl shadow-lg animate-on-scroll">
+                    <h3 class="text-2xl font-bold mb-6">Contact Details</h3>
+                    <div class="space-y-5 text-base sm:text-lg">
+                        <div class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-amber-500 mt-1 mr-4 w-5 text-center"></i>
+                            <p class="text-gray-700">R.P.S. School, Amber, Kachahari Road, Bihar Sharif, Nalanda - 803118</p>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-phone-alt text-amber-500 mr-4 w-5 text-center"></i>
+                            <a href="tel:+919801888611" class="text-gray-700 hover:text-amber-500">+91 9801888611</a>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-user-tie text-amber-500 mt-1 mr-4 w-5 text-center"></i>
+                            <div class="min-w-0">
+                                <a href="tel:+919117911519" class="text-gray-700 hover:text-amber-500 break-words">+91 9117911519</a>
+                                <span class="text-gray-500 text-sm block">Md Saif (Manager)</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-amber-500 mr-4 w-5 text-center"></i>
+                             <a href="mailto:universal.imagingpoint@gmail.com" class="text-gray-700 hover:text-amber-500 break-all">universal.imagingpoint@gmail.com</a>
+                        </div>
+                         <div class="flex items-center">
+                            <i class="fas fa-clock text-amber-500 mr-4 w-5 text-center"></i>
+                             <p class="text-gray-700">Open 24/7</p>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                         <p class="text-gray-600 font-semibold text-sm sm:text-base">Note: Please bring your Aadhar card, especially for pregnant women.</p>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 h-80 md:h-96 lg:h-auto rounded-xl shadow-lg overflow-hidden animate-on-scroll">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3611.026786064134!2d85.51733838499119!3d25.19176183804868!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f25bbfd003444b%3A0x8e831d1d3c0b4d4a!2sUniversal%20Imaging%20Point!5e0!3m2!1sen!2sin!4v1729432321289!5m2!1sen!2sin" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Feedback Button-->
+    <section id="feedback" class="hero-section text-white pt-40 pb-24 md:pt-52 md:pb-32">
+        <div class="container mx-auto px-4 text-center animate-on-scroll">
+            <h2 class="text-6xl sm:text-5xl md:text-6xl font-bold mb-4 stagger-child">Give Your Feedback</h2>
+            <p class="text-md sm:text-lg md:text-xl mb-10 max-w-3xl mx-auto stagger-child" style="--stagger-delay: 0.1s;">Please, give your valuable feedback. It will help us to make improvement.</p>
+            <a href="Feedback.html" class="bg-white text-teal-600 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition-all duration-300 text-lg stagger-child transform hover:scale-105 active:scale-95" style="--stagger-delay: 0.2s;">Feedback Here</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4 text-center">
+            <div class="mb-8">
+                 <button id="back-to-top" class="bg-white text-teal-600 font-bold py-3 px-8 rounded-full hover:bg-gray-200 transition-all duration-300 text-lg transform hover:scale-105 active:scale-95">
+                    <i class="fas fa-arrow-up mr-2"></i>Back to Top
+                 </button>
+            </div>
+            <p>&copy; <span id="year"></span> Universal Imaging Point Pvt. Ltd. All Rights Reserved.</p>
+            <p class="text-sm text-gray-400 mt-2">Website designed by Alishan.</p>
+        </div>
+    </footer>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-[100] flex justify-center items-center p-4 transition-opacity duration-300">
+        <button id="closeModal" class="absolute top-4 right-6 text-white text-5xl font-bold hover:text-gray-300">&times;</button>
+        <img id="modalImage" src="" alt="Enlarged facility view" class="max-w-[95vw] max-h-[90vh] object-contain rounded-lg">
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const body = document.body;
+            const header = document.getElementById('main-header');
+
+            const initMobileMenu = () => {
+                const menuButton = document.getElementById('mobile-menu-button');
+                const menuContainer = document.getElementById('mobile-menu-container');
+                const menu = document.getElementById('mobile-menu');
+                const navItems = document.querySelectorAll('.nav-item-mobile');
+                const openIcon = document.getElementById('menu-open-icon');
+                const closeIcon = document.getElementById('menu-close-icon');
+
+                if (!menuButton || !menuContainer || !menu || !openIcon || !closeIcon) return;
+
+                const toggleMenu = (forceClose = false) => {
+                    const isCurrentlyOpen = menu.classList.contains('open');
+                    const shouldBeOpen = forceClose ? false : !isCurrentlyOpen;
+
+                    if (shouldBeOpen) {
+                        menuContainer.classList.remove('hidden');
+                        setTimeout(() => {
+                            menuContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                            menu.classList.add('open');
+                        }, 10);
+                        openIcon.classList.add('hidden');
+                        closeIcon.classList.remove('hidden');
+                        body.classList.add('overflow-hidden');
+                    } else if (isCurrentlyOpen) {
+                        menuContainer.style.backgroundColor = 'rgba(0, 0, 0, 0)';
+                        menu.classList.remove('open');
+                        setTimeout(() => menuContainer.classList.add('hidden'), 400);
+                        openIcon.classList.remove('hidden');
+                        closeIcon.classList.add('hidden');
+                        body.classList.remove('overflow-hidden');
+                    }
+                };
+
+                menuButton.addEventListener('click', () => toggleMenu());
+                menuContainer.addEventListener('click', (e) => {
+                    if (e.target === menuContainer) toggleMenu(true);
+                });
+                navItems.forEach(item => item.addEventListener('click', () => toggleMenu(true)));
+            };
+
+            const initHeaderScroll = () => {
+                if (!header) return;
+                window.addEventListener('scroll', () => {
+                    header.classList.toggle('scrolled', window.scrollY > 50);
+                });
+            };
+            
+            const initScrollAnimations = () => {
+                const animatedElements = document.querySelectorAll('.animate-on-scroll');
+                if (animatedElements.length === 0) return;
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                animatedElements.forEach(element => {
+                    observer.observe(element);
+                });
+            };
+            
+            const initImageModal = () => {
+                const galleryLinks = document.querySelectorAll('.gallery-link');
+                const imageModal = document.getElementById('imageModal');
+                const modalImage = document.getElementById('modalImage');
+                const closeModalButton = document.getElementById('closeModal');
+
+                if (galleryLinks.length === 0 || !imageModal) return;
+
+                const openModal = (imageUrl) => {
+                    modalImage.src = imageUrl;
+                    imageModal.classList.remove('hidden');
+                    body.classList.add('overflow-hidden');
+                };
+
+                const closeModal = () => {
+                    imageModal.classList.add('hidden');
+                    body.classList.remove('overflow-hidden');
+                };
+
+                galleryLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        openModal(link.href);
+                    });
+                });
+
+                closeModalButton.addEventListener('click', closeModal);
+                imageModal.addEventListener('click', (e) => {
+                    if (e.target === imageModal) closeModal();
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && !imageModal.classList.contains('hidden')) {
+                        closeModal();
+                    }
+                });
+            };
+            
+            const initThemeSwitcher = () => {
+                const desktopToggleBtn = document.getElementById('desktop-theme-toggle');
+                const mobileToggleBtn = document.getElementById('mobile-theme-toggle');
+                const toggleButtons = [desktopToggleBtn, mobileToggleBtn].filter(btn => btn !== null);
+
+                const desktopDarkIcon = document.getElementById('desktop-theme-toggle-dark-icon');
+                const desktopLightIcon = document.getElementById('desktop-theme-toggle-light-icon');
+                const mobileDarkIcon = document.getElementById('mobile-theme-toggle-dark-icon');
+                const mobileLightIcon = document.getElementById('mobile-theme-toggle-light-icon');
+                const htmlEl = document.documentElement;
+
+                if (toggleButtons.length === 0) return;
+                
+                const setTheme = (theme) => {
+                    if (theme === 'dark') {
+                        htmlEl.classList.add('dark');
+                        if(desktopLightIcon) desktopLightIcon.classList.remove('hidden');
+                        if(desktopDarkIcon) desktopDarkIcon.classList.add('hidden');
+                        if(mobileLightIcon) mobileLightIcon.classList.remove('hidden');
+                        if(mobileDarkIcon) mobileDarkIcon.classList.add('hidden');
+                        localStorage.setItem('theme', 'dark');
+                    } else {
+                        htmlEl.classList.remove('dark');
+                        if(desktopLightIcon) desktopLightIcon.classList.add('hidden');
+                        if(desktopDarkIcon) desktopDarkIcon.classList.remove('hidden');
+                        if(mobileLightIcon) mobileLightIcon.classList.add('hidden');
+                        if(mobileDarkIcon) mobileDarkIcon.classList.remove('hidden');
+                        localStorage.setItem('theme', 'light');
+                    }
+                };
+
+                const currentTheme = localStorage.getItem('theme') || 'light';
+                setTheme(currentTheme);
+
+                toggleButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const newTheme = htmlEl.classList.contains('dark') ? 'light' : 'dark';
+                        setTheme(newTheme);
+                    });
+                });
+            };
+
+            const initBackToTopButton = () => {
+                const backToTopButton = document.getElementById('back-to-top');
+                if (!backToTopButton) return;
+                backToTopButton.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            };
+
+            const initFooterYear = () => {
+                const yearSpan = document.getElementById('year');
+                if(yearSpan) {
+                    yearSpan.textContent = new Date().getFullYear();
+                }
+            };
+
+            initMobileMenu();
+            initHeaderScroll();
+            initScrollAnimations();
+            initImageModal();
+            initThemeSwitcher();
+            initBackToTopButton();
+            initFooterYear();
+        });
+    </script>
+</body>
+</html>
+
